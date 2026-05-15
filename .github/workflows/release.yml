@@ -173,25 +173,15 @@ jobs:
           merge-multiple: true
 
       - name: Merge Windows Update Metadata
-        if: hashFiles('dist/latest-win-x64.yml') != '' && hashFiles('dist/latest-win-arm64.yml') != ''
         shell: bash
         run: |
           set -e
-
-          YQ_VERSION=$(yq --version | grep -oP 'version v?\K\d+' || echo 0)
-          if [ "$YQ_VERSION" -lt 4 ]; then
-            echo "Current yq version ($YQ_VERSION) is too old, updating to latest v4..."
-            sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
-            sudo chmod +x /usr/local/bin/yq
-          else
-            echo "yq version $YQ_VERSION is already up to date."
-          fi
 
           WIN_X64="dist/latest-win-x64.yml"
           WIN_ARM="dist/latest-win-arm64.yml"
 
           if [[ -f "$WIN_X64" && -f "$WIN_ARM" ]]; then
-            yq eval-all 'select(fi == 0) * {"files": (select(fi == 0).files + select(fi == 1).files)}' "$WIN_X64" "$WIN_ARM" > dist/latest.yml
+            yq eval-all 'select(fi == 0) .files += [select(fi == 1) .files[]] | select(fi == 0)' "$WIN_X64" "$WIN_ARM" > dist/latest.yml
             rm -f "$WIN_X64" "$WIN_ARM"
             exit 0
           elif [[ -f "$WIN_X64" ]]; then
