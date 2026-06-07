@@ -10,7 +10,8 @@
 - 优化: 统一请求头处理工具，格式化为Chromium标准; 增加sec-ch/sec-fetch头处理
 - 优化: hls去广优化匹配算法; 新增SSAI动态帧率指纹算法 [pr #533]
 - 优化: 媒体文件类型识别
-- 优化: proxy和adremove接口对head方法的处理
+- 优化: 后端proxy和adremove接口对head方法的处理
+- 优化: 前端history和star改为hooks处理
 - 修复: site接口一处缺失默认值导致自动化初始debug数据失败
 - 修复: 自动提升机器安装的静默更新
 - 修复: win11全屏下左右存在白边 [issue #529 #532]
